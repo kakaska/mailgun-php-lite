@@ -63,6 +63,11 @@ class MailgunLite
     protected $error = '';
 
     /**
+     * @var bool
+     */
+    protected $debug = false;
+
+    /**
      * MailGun constructor.
      * @param string $apiKey
      * @param string $apiDomain
@@ -163,6 +168,16 @@ class MailgunLite
     }
 
     /**
+     * @param bool $debug
+     * @return self
+     */
+    public function setDebug(bool $debug):self
+    {
+        $this->debug = $debug;
+        return $this;
+    }
+
+    /**
      * Register email to a mailing list
      *
      * @param string $list
@@ -191,8 +206,10 @@ class MailgunLite
             )
         );
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 1);
+        if($this->debug) {
+            curl_setopt($ch, CURLOPT_VERBOSE, 1);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+        }
 
         $result = curl_exec($ch);
 
@@ -249,8 +266,10 @@ class MailgunLite
         curl_setopt($ch, CURLOPT_URL, sprintf(self::MAILGUN_API_MESSAGES, $this->apiDomain));
         curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_VERBOSE, 1);
-        curl_setopt($ch, CURLOPT_HEADER, 1);
+        if($this->debug) {
+            curl_setopt($ch, CURLOPT_VERBOSE, 1);
+            curl_setopt($ch, CURLOPT_HEADER, 1);
+        }
 
         $result = curl_exec($ch);
 
